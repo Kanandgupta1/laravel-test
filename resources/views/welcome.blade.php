@@ -21,6 +21,7 @@
              {{ csrf_field() }}
               <div class="row">
                   <div class="col-md-12">
+                   <span class="msg"></span>
                       <table class="table table-bordered">          
                           <tr>
                               <th>S.No</th>
@@ -28,26 +29,31 @@
                               <th>Quantity</th>
                               <th>Price</th>
                               <th>Total</th>
+                               <th>Date Time</th>
                               <th>Action</th>
                           </tr>
                           <?php $totals = 0; ?>
+                            <?php $count = 1; ?>
                          @foreach($product as $items)
                          <?php $totals += $items->total; ?>
                           <tr>
-                              <td>{{ $items->id }}</td>
+                              <td>{{ $count }}</td>
                               <td>{{ $items->name }}</td>
                               <td>{{ $items->quantity }}</td>
                               <td>&#x20b9; {{ $items->price }}</td>
                               <td>&#x20b9; {{ $items->total }}</td>
+                              <td>{{ $items->created_at }}</td>
                                <td><button type="button" class="edit-modal btn btn-info" data-toggle="modal" data-target="#edit-modal"  data-id="{{$items->id}}" data-name="{{$items->name}}"  data-quantity="{{$items->quantity}}"
                             data-price="{{$items->price}}">Edit</button></td>
                           </tr>
+                          <?php $count++; ?>
                           @endforeach
                           <tr>
                               <th colspan="4" class="text-right">Subtotal</th>
-                              <td colspan="2"><b>&#x20b9; {{ $totals }}</b></td>
+                              <td colspan="3"><b>&#x20b9; {{ $totals }}</b></td>
                           </tr>
                       </table>
+                       {{ $product->links() }}
                   </div>
               </div>
         </div>
