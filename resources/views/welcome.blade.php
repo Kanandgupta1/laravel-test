@@ -11,85 +11,108 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+        <div class="container" style="padding: 50px 0px;">
+             <div class="well well-sm text-right">
+                 <button class="btn btn-info" type="button" data-toggle="modal" data-target="#add-modal">Add</button>
+             </div>
+             {{ csrf_field() }}
+              <div class="row">
+                  <div class="col-md-12">
+                      <table class="table table-bordered">          
+                          <tr>
+                              <th>S.No</th>
+                              <th>Product Name</th>
+                              <th>Quantity</th>
+                              <th>Price</th>
+                              <th>Total</th>
+                              <th>Action</th>
+                          </tr>
+                          <?php $totals = 0; ?>
+                         @foreach($product as $items)
+                         <?php $totals += $items->total; ?>
+                          <tr>
+                              <td>{{ $items->id }}</td>
+                              <td>{{ $items->name }}</td>
+                              <td>{{ $items->quantity }}</td>
+                              <td>&#x20b9; {{ $items->price }}</td>
+                              <td>&#x20b9; {{ $items->total }}</td>
+                               <td><button type="button" class="edit-modal btn btn-info" data-toggle="modal" data-target="#edit-modal"  data-id="{{$items->id}}" data-name="{{$items->name}}"  data-quantity="{{$items->quantity}}"
+                            data-price="{{$items->price}}">Edit</button></td>
+                          </tr>
+                          @endforeach
+                          <tr>
+                              <th colspan="4" class="text-right">Subtotal</th>
+                              <td colspan="2"><b>&#x20b9; {{ $totals }}</b></td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+        </div>
+         <!-- Add Modal -->
+        <div id="add-modal" class="modal fade add-modal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Product Add</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="Name">Proudct Name:</label>
+                            <input type="text" class="form-control" name="name" placeholder="Enter Proudct Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="text" class="form-control" name="quantity" placeholder="Enter Quantity">
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="text" class="form-control" name="price" placeholder="Enter Price">
+                        </div>
+                        <button type="button" class="btn btn-info" id="add">Add</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
+         <!-- Add Modal -->
+        <div id="edit-modal" class="modal fade edit-modal-form" role="dialog">
+            <div class="modal-dialog">
+            <input type="hidden" class="form-control" id="id">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Product Edit</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="Name">Proudct Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter Proudct Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity">
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="text" class="form-control" id="price" placeholder="Enter Price">
+                        </div>
+                        <button type="button" class="btn btn-info" id="edit">Edit</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/script.js') }}" type="text/javascript"></script>
     </body>
 </html>
